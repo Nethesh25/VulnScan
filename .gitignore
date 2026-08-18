@@ -1,0 +1,6 @@
+Frontend/node_modules/
+Frontend/dist/
+Frontend/.env
+backend/.env
+backend/__pycache__/
+backend/**/*.pyc
