@@ -4,6 +4,7 @@ import { BrowserRouter, Link, Route, Routes, useNavigate, useParams } from 'reac
 import axios from 'axios'
 import { Activity, ArrowRight, CheckCircle2, LockKeyhole, ShieldCheck, XCircle } from 'lucide-react'
 import './styles.css'
+import jsPDF from "jspdf"
 
 const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api', timeout: 15000 })
 const Disclaimer = () => <p className="disclaimer">Only scan websites you own or are authorized to assess. VulnScan Lite performs passive analysis only.</p>
@@ -67,6 +68,23 @@ function Report() {
     )
 
   const checks = Object.entries(report.headers || {})
+const downloadPDF = () => {
+  const doc = new jsPDF()
+
+  doc.setFontSize(20)
+  doc.text("VulnScan Lite Security Report", 20, 20)
+
+  doc.setFontSize(12)
+  doc.text(`URL: ${report.url}`, 20, 40)
+  doc.text(`Score: ${report.score}/100`, 20, 50)
+  doc.text(`Grade: ${report.grade}`, 20, 60)
+  doc.text(`Risk Level: ${report.risk_level}`, 20, 70)
+
+  doc.text(`Passed Checks: ${report.summary.passed}`, 20, 90)
+  doc.text(`Failed Checks: ${report.summary.failed}`, 20, 100)
+
+  doc.save("VulnScan-Report.pdf")
+}
 
   return (
     <Layout>
@@ -84,6 +102,9 @@ function Report() {
           <strong>{report.score}</strong>
           <span>/ 100 · {report.grade}</span>
         </div>
+        <button onClick={downloadPDF}>
+  Download PDF
+</button>
       </section>
 
       <section className="metrics">
